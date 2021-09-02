@@ -1,4 +1,8 @@
+
+// number of results and error handling
 const resultNumber = (bg, innerText) =>{
+    const bookContainer = document.getElementById('book-container');
+    bookContainer.textContent=''
     const result = document.getElementById('result-number');
     result.classList.add(bg);
     result.innerText = innerText;
@@ -15,7 +19,7 @@ const getSearchInput = async() =>{
             const data = await res.json();
             displaySearchResult(data);
         } catch (error) {
-            console.log(error);
+            resultNumber('bg-danger', error)
         }
     }else{
         resultNumber('bg-warning', 'Please type something to search')
@@ -56,8 +60,6 @@ const displaySearchResult = (data) =>{
         
         });
     }else{
-        const bookContainer = document.getElementById('book-container');
-        bookContainer.textContent=''
         resultNumber('text-danger', 'No result found')
     }
 }
