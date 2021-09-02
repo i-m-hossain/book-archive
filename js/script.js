@@ -1,18 +1,38 @@
-
+// loader status
+const loader = (status) =>{
+    const loader = document.getElementById('loader');
+    loader.style.display = status
+}
+// result conatiner status
+const result = (status)=>{
+    const resultContainer = document.getElementById('result-container');
+    resultContainer.style.display =status;
+}
 // number of results and error handling
 const resultNumber = (bg, innerText) =>{
     const bookContainer = document.getElementById('book-container');
+    console.log(bookContainer);
     bookContainer.textContent=''
-    const result = document.getElementById('result-number');
-    result.classList.add(bg);
-    result.innerText = innerText;
+    const resultNumber = document.getElementById('result-number');
+    resultNumber.classList.add(bg);
+    resultNumber.innerText = innerText;
+    result('block')
+    loader('none');
+    
 }
 //get search input field values
-const getSearchInput = async() =>{
+const getSearchInput = () =>{
     const searchInput = document.getElementById('search-input');
     const searchText = searchInput.value
+    loader('block');
+    result('none');
+    loadSearch(searchText);
+    searchInput.value =''
+}
+const loadSearch = async(searchText) =>{ 
+    console.log(searchText);
     const url = `https://openlibrary.org/search.json?q=${searchText}`
-    if(searchInput.value !==''){
+    if(searchText !==''){
         try {
             console.log(url);
             const res = await fetch(url);
@@ -20,9 +40,11 @@ const getSearchInput = async() =>{
             displaySearchResult(data);
         } catch (error) {
             resultNumber('bg-danger', error)
+            
         }
     }else{
-        resultNumber('bg-warning', 'Please type something to search')
+    
+        resultNumber('bg-warning', 'Please type something to search');
     }
  
 }
@@ -57,6 +79,8 @@ const displaySearchResult = (data) =>{
                     </div>
             `
             bookContainer.appendChild(div);
+            loader('none')
+            result('block')
         
         });
     }else{
